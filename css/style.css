@@ -1,0 +1,35 @@
+.main-title {
+    font-weight: bold;
+    font-size: 48px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular';
+    color: #008f07;
+}
+
+.lives {
+    font-weight: bold;
+    font-size: 24px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular';
+    color: #8f0000;
+    padding: 2em;
+}
+
+.score {
+    font-weight: bold;
+    font-size: 24px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular';
+    color: #000000;
+    padding: 2em;
+}
+
+body {
+    text-align: center;
+}
+
+#wingame {
+    text-align: center;
+    padding: 0em;
+    font-weight: bold;
+    font-size: 48px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular';
+    color: #008f07;
+}
