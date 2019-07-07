@@ -42,9 +42,9 @@ For detailed instructions on how to get started, check out this [guide](https://
 This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
 
 
-## CAG - My Added Code
+# CAG - My Added Code
 
-# Variables
+## Variables
 
 Variables created for Game State, Lives, and Score
 
@@ -55,7 +55,7 @@ let game = true;
 let playerScore = 0;
 let playerLives = 3;
 ```
-variables for the DOM classes
+Variables for the DOM classes
 
 ```
 let lives = document.querySelector(".lives");
@@ -67,8 +67,9 @@ Updates the text content
 lives.textContent = `Lives: ${playerLives}`;
 score.textContent = `Score: ${playerScore}`;
 ```
+Enemy function
 
-
+```
 // Enemies our player must avoid
 var Enemy = function Enemy(x, y) {
     // Variables applied to each of our instances go here,
@@ -81,11 +82,11 @@ var Enemy = function Enemy(x, y) {
     this.y = y;
     this.speed = 100;
 };
+```
 
+Updates the Enemies position and add collision with the player when overlapping the enemy.
 
-
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
+```
 Enemy.prototype.update = function(dt) {
 
     //Moves Enemies and resets their position when reaching the end of the canvas
@@ -111,15 +112,20 @@ Enemy.prototype.update = function(dt) {
     };
 };
 
+```
+## Render the graphics
 
-
+```
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+```
 
+Variable for player images.
+The player function randomizes the image every new game.
 
-
+```
 // Player Images
 var playerSelect = [
     'images/char-boy.png',
@@ -142,9 +148,11 @@ const Player = function Player(x, y, sprite) {
     this.v_step = 83;
     console.log(this.sprite);
 };
+```
+Checks if the player reaches the water, adds +100 to score and runs the playerWin function.
+If the player uses all lives then it is game over.
 
-
-
+```
 Player.prototype.update = function(dt) {
 
     if (game && player.y < 40) {
@@ -160,9 +168,13 @@ Player.prototype.update = function(dt) {
     };
 
 };
+```
+1. Resets player function to a specific x/y coordinate.
+2. Renders player graphics
+3. Creates enemieswith x/y coordinates on canvas.
+4. Places player on convas as specified x/y coords.
 
-
-
+```
 Player.prototype.resetPosition = function() {
     this.x = 303;
     this.y = 650;
@@ -185,8 +197,11 @@ var allEnemies = [new Enemy(700, 60), new Enemy(700, 143), new Enemy(700, 226),
 
 // Place the player object in a variable called player
 const player = new Player(303, 650);
+```
 
+Player controls and also limits ability to leave the canvas.
 
+```
 
 Player.prototype.handleInput = function (movement) {
 
@@ -233,8 +248,10 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+```
+Attempted to add gems but there is an error 
 
-
+```
 const gemSet=[{name:'blue', image:'images/Gem blue.png', value: 50 },
               {name:'green', image:'images/Gem green.png', value: 25},
               {name:'orange', image:'images/Gem Orange.png', value: 100}];
@@ -258,41 +275,111 @@ const gems = function gems(props){
     this.y = y_blocks[Math.floor(Math.random()*x_blocks.length)];
 
 };
+```
 
+Create Gems
 
-/* // Gem Spawn
-const Gem = function Gem(x, y) {
-    this.sprite = 'images/Gem Blue.png';
+```
+// Gem Spawn
+const Gem = function Gem(x, y, sprite) {
+    this.sprite = sprite;
     this.x = x;
     this.y = y;
-}; */
+};
+```
+
+This creates the end goal, then the next function updates and finally the last renders it.
+
+```
+const EndGoal = function EndGoal(x, y) {
+    this.sprite = 'images/Selector.png';
+    this.x = x;
+    this.y = y;
+};
 
 
 
-// Goal image and feature
-/* gemSpawn.prototype.update = function(dt) {
-    this.x = canvas.width / 2;
-    this.y = canvas.height / 2;
-}; */
+EndGoal.prototype.update = function() {
+
+    
+    var gemLeftX = this.x - 60;
+    var gemRightX = this.x + 60;
+    var gemTopY = this.y - 60;
+    var gemBottomY = this.y + 60;
 
 
+    if (player.x > gemLeftX && player.x < gemRightX && player.y > gemTopY && player.y < gemBottomY) {
 
-gems.prototype.render = function() {
+        score.textContent = `Score: ${(playerScore += 25)}`;
+
+    };
+};
+
+EndGoal.prototype.render = function() {
 
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 
 };
+```
+
+Gem update function then render function afterwards.
+
+```
+// Goal image and feature
+Gem.prototype.update = function() {
+
+    
+    var gemLeftX = this.x - 60;
+    var gemRightX = this.x + 60;
+    var gemTopY = this.y - 60;
+    var gemBottomY = this.y + 60;
 
 
+    if (player.x > gemLeftX && player.x < gemRightX && player.y > gemTopY && player.y < gemBottomY) {
 
-gems.prototype.collection = function() {
+        score.textContent = `Score: ${(playerScore += 25)}`;
 
+    };
 };
 
 
 
-const createGem = new gems();
+Gem.prototype.render = function() {
 
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
+};
+```
+
+This creates an array of coordinates and then randomized them to fit within the canvas and grid
+
+```
+let gemMoveX = [101, 202, 303, 404, 505, 606];
+let gemMoveY = [133, 216, 299, 382, 465, 548];
+let gemRandomLocX = gemMoveX[(Math.floor(gemMoveX.length * Math.random()))];
+let gemRandomLocY = gemMoveY[(Math.floor(gemMoveY.length * Math.random()))];
+
+function gemRand() {
+    gemMoveX[(Math.floor(gemMoveX.length * Math.random()))];
+}
+ 
+// Creates new gems
+
+
+const createGem = [new Gem(gemRand(), gemRandomLocY, 'images/Gem Blue.png'),
+                    new Gem(gemRand(), gemRandomLocY, 'images/Gem Green.png'),
+                    new Gem(gemRandomLocX, gemRandomLocY, 'images/Gem Orange.png')];
+```
+
+This is the trigger for the player reaching the end of the level, the water
+
+```
+const endTrigger = [new EndGoal(gemRandomLocX, -40)];
+```                    
+
+The win, reset, and game over functions   
+
+```
 // Player Wins function
 
 var winMsg = document.getElementById("wingame");
@@ -326,4 +413,4 @@ function gameOver() {
     playerLives = 3;
     lives.textContent = `Lives: ${playerLives}`;
 }
-
+```

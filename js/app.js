@@ -83,7 +83,6 @@ const Player = function Player(x, y, sprite) {
     this.y = y;
     this.h_step = 101;
     this.v_step = 83;
-    console.log(this.sprite);
 };
 
 
@@ -93,8 +92,7 @@ Player.prototype.update = function(dt) {
     if (game && player.y < 40) {
         game = false;
         player.resetPosition();
-        score.textContent = `Score: ${(playerScore += 100)}`;
-        console.log(`Game over: ${game} - Score: ${playerScore}`);
+        score.textContent = `Score: ${(playerScore += 1000)}`;
         playerWin();
     };
 
@@ -178,63 +176,86 @@ document.addEventListener('keyup', function(e) {
 });
 
 
-const gemSet=[{name:'blue', image:'images/Gem blue.png', value: 50 },
-              {name:'green', image:'images/Gem green.png', value: 25},
-              {name:'orange', image:'images/Gem Orange.png', value: 100}];
+// Gem Spawn
+const Gem = function Gem(x, y, sprite) {
+    this.sprite = sprite;
+    this.x = x;
+    this.y = y;
+};
 
-const x_blocks=[101,505];
+const EndGoal = function EndGoal(x, y) {
+    this.sprite = 'images/Selector.png';
+    this.x = x;
+    this.y = y;
+};
 
-const y_blocks=[100,200];
+EndGoal.prototype.update = function() {
 
-const gems = function gems(props){
+    
+    var gemLeftX = this.x - 60;
+    var gemRightX = this.x + 60;
+    var gemTopY = this.y - 60;
+    var gemBottomY = this.y + 60;
 
-//to set gems randomly
 
-    var g = gemSet[Math.floor(Math.random()* gemSet.length) ];
+    if (player.x > gemLeftX && player.x < gemRightX && player.y > gemTopY && player.y < gemBottomY) {
 
-    this.name = g.name;
+        score.textContent = `Score: ${(playerScore += 25)}`;
 
-    this.image = g.image; this.value = g.value;
+    };
+};
 
-    this.x = x_blocks[Math.floor(Math.random()*x_blocks.length)];
+EndGoal.prototype.render = function() {
 
-    this.y = y_blocks[Math.floor(Math.random()*x_blocks.length)];
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 
 };
 
-
-/* // Gem Spawn
-const Gem = function Gem(x, y) {
-    this.sprite = 'images/Gem Blue.png';
-    this.x = x;
-    this.y = y;
-}; */
-
-
-
 // Goal image and feature
-/* gemSpawn.prototype.update = function(dt) {
-    this.x = canvas.width / 2;
-    this.y = canvas.height / 2;
-}; */
+Gem.prototype.update = function() {
+
+    
+    var gemLeftX = this.x - 60;
+    var gemRightX = this.x + 60;
+    var gemTopY = this.y - 60;
+    var gemBottomY = this.y + 60;
+
+
+    if (player.x > gemLeftX && player.x < gemRightX && player.y > gemTopY && player.y < gemBottomY) {
+
+        score.textContent = `Score: ${(playerScore += 25)}`;
+
+    };
+};
 
 
 
-gems.prototype.render = function() {
+Gem.prototype.render = function() {
 
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 
 };
 
 
+let gemMoveX = [101, 202, 303, 404, 505, 606];
+let gemMoveY = [133, 216, 299, 382, 465, 548];
+let gemRandomLocX = gemMoveX[(Math.floor(gemMoveX.length * Math.random()))];
+let gemRandomLocY = gemMoveY[(Math.floor(gemMoveY.length * Math.random()))];
 
-gems.prototype.collection = function() {
+function gemRand() {
+    gemMoveX[(Math.floor(gemMoveX.length * Math.random()))];
+}
+ 
+// Creates new gems
 
-};
 
+const createGem = [new Gem(gemRand(), gemRandomLocY, 'images/Gem Blue.png'),
+                    new Gem(gemRand(), gemRandomLocY, 'images/Gem Green.png'),
+                    new Gem(gemRandomLocX, gemRandomLocY, 'images/Gem Orange.png')];
 
-
-const createGem = new gems();
+const endTrigger = [new EndGoal(gemRandomLocX, -40)];
+                    
+                    
 
 // Player Wins function
 

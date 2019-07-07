@@ -79,7 +79,6 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        //gemSpawn.update();
         // checkCollisions();
     }
 
@@ -95,6 +94,12 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+        createGem.forEach(function(gems) {
+            gems.update(dt);
+        });
+        endTrigger.forEach(function(end) {
+            end.update(dt);
+        });
     }
 
     /* This function initially draws the "game level", it will then call
@@ -158,7 +163,12 @@ var Engine = (function(global) {
         });
 
         player.render();
-        //gem.render();
+        createGem.forEach(function(gems) {
+            gems.render();
+        });
+        endTrigger.forEach(function(end) {
+            end.render();
+        });
     }
 
     /* This function does nothing but it could have been a good place to
